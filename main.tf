@@ -107,4 +107,15 @@ resource "google_sql_database_instance" "cs_db" {
       private_network = google_compute_network.vpc_network.id
     }
   }
-}  
+}
+# Creating DB and access settings
+  resource "google_sql_database" "database" {
+  name     = "app_db"
+  instance = google_sql_database_instance.cs_db.name
+}
+
+resource "google_sql_user" "db_user" {
+  name     = "admin"
+  instance = google_sql_database_instance.cs_db.name
+  password = "nimda"
+}
