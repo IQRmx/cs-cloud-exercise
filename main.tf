@@ -92,3 +92,18 @@ resource "google_service_networking_connection" "private_vpc_connection" {
   service                 = "servicenetworking.googleapis.com"
   reserved_peering_ranges = [google_compute_global_address.private_ip_alloc.name]
 }
+
+# DB 
+resource "google_sql_database_instance" "cs_db" {
+  name             = "cs-db"
+  database_version = "POSTGRES_14"
+  region           = "us-central1"
+
+  settings {
+    tier = "db-f1-micro"
+
+    ip_configuration {
+      ipv4_enabled    = false  # No public IP Address
+      private_network = google_compute_network.vpc_network.id
+    }
+  }
