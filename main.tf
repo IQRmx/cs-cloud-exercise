@@ -14,6 +14,22 @@ resource "google_compute_subnetwork" "subnet"{
 	ip_cidr_range = "10.0.1.0/24"
 	region = "us-central1"
 }
+
+# NAT Gateway
+resource "google_compute_router" "nat_router" {
+  name    = "cs-nat-router"
+  region  = "us-central1"
+  network = google_compute_network.vpc_network.id
+}
+
+resource "google_compute_router_nat" "nat_gateway" {
+  name                               = "cs-nat-gateway"
+  router                             = google_compute_router.nat_router.name
+  region                             = google_compute_router.nat_router.region
+  nat_ip_allocate_option             = "AUTO_ONLY"
+  source_subnetwork_ip_ranges_to_nat = "ALL_SUBNETWORKS_ALL_IP_RANGES"
+}
+
 ## VM 
 resource "google_compute_instance" "vm_instance" {
   name         = "cs-vm"
