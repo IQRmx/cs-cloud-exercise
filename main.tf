@@ -63,3 +63,16 @@ resource "google_compute_firewall" "allow_ssh_http" {
   source_ranges = ["0.0.0.0/0"]
   target_tags   = ["web-server"]
 }
+
+# Firewall rule to allow internal db
+resource "google_compute_firewall" "allow_internal_db" {
+  name    = "allow-internal-db"
+  network = google_compute_network.vpc_network.id
+
+  allow {
+    protocol = "tcp"
+    ports    = ["5432"]
+  }
+
+  source_ranges = ["10.0.1.0/24"]  
+}
